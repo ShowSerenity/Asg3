@@ -9,6 +9,15 @@ public class Jacket extends Outwear {
         setButtons(buttons);
         setZipper(zipper);
     }
+    private static Jacket instance;
+
+    public static Jacket getInstance(String brand, String model, String gender, int price, boolean print, boolean zipper, int buttons) {
+        if (instance == null) {
+            instance = new Jacket(brand, model, gender, price, print, zipper, buttons);
+        }
+        return instance;
+    }
+
 
     public void setZipper(boolean zipper) {
         this.zipper = zipper;

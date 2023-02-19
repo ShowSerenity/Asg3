@@ -8,6 +8,15 @@ public class Hoodie extends Outwear {
         setColor(color);
     }
 
+    private static Hoodie instance;
+
+    public static Hoodie getInstance(String brand, String model, String gender, int price, boolean print, String color) {
+        if (instance == null) {
+            instance = new Hoodie(brand, model, gender, price, print, color);
+        }
+        return instance;
+    }
+
     public void setColor(String color) {
         this.color = color;
     }

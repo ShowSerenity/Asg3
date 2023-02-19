@@ -8,6 +8,15 @@ public class ClassicShirt extends Shirt {
         setChestPocket(chestPocket);
     }
 
+    private static ClassicShirt instance;
+
+    public static ClassicShirt getInstance(String brand, String model, String gender, int price, boolean durable, boolean chestPocket) {
+        if (instance == null) {
+            instance = new ClassicShirt(brand, model, gender, price, durable, chestPocket);
+        }
+        return instance;
+    }
+
     public void setChestPocket(boolean chestPocket) {
         this.chestPocket = chestPocket;
     }

@@ -7,6 +7,15 @@ public class Trousers extends Pants {
         setSport(sport);
     }
 
+    private static Trousers instance;
+
+    public static Trousers getInstance(String brand, String model, String gender, int price, int pockets, boolean belt, boolean sport) {
+        if (instance == null) {
+            instance = new Trousers(brand, model, gender, price, pockets, belt, sport);
+        }
+        return instance;
+    }
+
     public void setSport(boolean sport) {
         this.sport = sport;
     }

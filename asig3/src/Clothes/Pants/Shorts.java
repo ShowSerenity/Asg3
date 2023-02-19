@@ -7,6 +7,15 @@ public class Shorts extends Pants {
         setExtraShort(extraShort);
     }
 
+    private static Shorts instance;
+
+    public static Shorts getInstance(String brand, String model, String gender, int price, int pockets, boolean belt, boolean extraShort) {
+        if (instance == null) {
+            instance = new Shorts(brand, model, gender, price, pockets, belt, extraShort);
+        }
+        return instance;
+    }
+
     public void setExtraShort(boolean extraShort) {
         this.extraShort = extraShort;
     }

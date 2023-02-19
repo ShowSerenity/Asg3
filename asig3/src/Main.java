@@ -1,15 +1,12 @@
-import Clothes.Outwears.*;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
-    static ArrayList<Integer> cart = new ArrayList<Integer>();
+    static ArrayList<Integer> cart = new ArrayList<>();
+    static Console console = Console.getInstance();
 
     public static void main(String[] args) {
-        Console console = new Console();
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the clothing store");
         login();
     }
@@ -20,6 +17,8 @@ public class Main {
         System.out.println("Log in as a customer(1), or a seller(2)");
         int choice = scanner.nextInt();
         if (choice == 1) {
+            System.out.println("Welcome!!!");
+            System.out.println("--------------");
             customerConsole();
         } else if (choice == 2) {
             sellerLogin();
@@ -32,8 +31,6 @@ public class Main {
 
     public static void customerConsole() {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
-        String table;
         System.out.println("Which piece of clothing do you want to purchase?");
         System.out.println("1) Jacket");
         System.out.println("2) Hoodie");
@@ -47,28 +44,22 @@ public class Main {
         switch (choice) {
             case 1:
                 console.showClothes("jacket");
-                table = "jacket";
-                itemDetails(table);
+                itemDetails("jacket");
             case 2:
                 console.showClothes("hoodie");
-                table = "hoodie";
-                itemDetails(table);
+                itemDetails("hoodie");
             case 3:
                 console.showClothes("trousers");
-                table = "trousers";
-                itemDetails(table);
+                itemDetails("trousers");
             case 4:
                 console.showClothes("shorts");
-                table = "shorts";
-                itemDetails(table);
+                itemDetails("shorts");
             case 5:
                 console.showClothes("classicShirt");
-                table = "classicShirt";
-                itemDetails(table);
+                itemDetails("classicShirt");
             case 6:
                 console.showClothes("sweatshirt");
-                table = "sweatshirt";
-                itemDetails(table);
+                itemDetails("sweatshirt");
             case 7:
                 viewCart();
             case 8:
@@ -79,7 +70,6 @@ public class Main {
 
     public static void itemDetails(String table) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Type id of item");
         int id = scanner.nextInt();
         console.showClothByID(table, id);
@@ -104,11 +94,17 @@ public class Main {
 
     public static void viewCart() {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
-        System.out.println("Items in the cart");
-        for (int i = 0; i < cart.size(); i++) {
-            console.showClothByID(cart.get(i));
-            System.out.println("-------------------");
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is empty");
+            System.out.println("--------------------");
+            customerConsole();
+        }
+        else {
+            System.out.println("Items in the cart");
+            for (Integer integer : cart) {
+                console.showClothByID(integer);
+                System.out.println("-------------------");
+            }
         }
         System.out.println("Make a purchase? y/n");
         String choice = scanner.nextLine();
@@ -124,13 +120,12 @@ public class Main {
 
     public static void makePurchase() {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         int total = 0;
-        for (int i = 0; i<cart.size(); i++) {
-            total = total + console.showPrice(cart.get(i));
+        for (Integer integer : cart) {
+            total = total + console.showPrice(integer);
         }
         System.out.println("The total price would be: " + total);
-        System.out.println("Confirm the transaction y/n");
+        System.out.println("Confirm the transaction? y/n");
         String confirmation = scanner.nextLine();
         if (confirmation.equals("y")) {
             System.out.println("Transaction was successful");
@@ -149,33 +144,53 @@ public class Main {
 
     public static void sellerLogin() {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Log in(1) or Sign up(2)");
         int choice = scanner.nextInt();
         if (choice == 1) {
-            System.out.println("Type your name: ");
-            String name = scanner.nextLine();
-            scanner.nextLine();
-            System.out.println("Type your password: ");
-            String password = scanner.nextLine();
-            sellerConsole(name);
-
+            SellerLoginProcess();
         }
         else if (choice == 2) {
-            System.out.println("Type your name: ");
-            String name = scanner.nextLine();
-            scanner.nextLine();
-            System.out.println("Type your password: ");
-            String password = scanner.nextLine();
-            console.newSeller(name, password);
-            System.out.println("--------------------");
+            SignUp();
+        }
+    }
+
+    public static void SellerLoginProcess() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Type your name: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Type your password: ");
+        String password = scanner.nextLine();
+
+        if (Console.checkP(name, password)) {
+            System.out.println("Access granted");
+            System.out.println("--------------");
+            sellerConsole(name);
+        }
+        else {
+            System.out.println("Access denied");
+            System.out.println("--------------");
             sellerLogin();
         }
     }
 
+    public static void SignUp() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        console.newSeller(username, password);
+        System.out.println("--------------------");
+        sellerLogin();
+    }
+
     public static void sellerConsole(String name) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Which action do you want to perform?");
         System.out.println("1) Check my goods");
         System.out.println("2) Update my goods");
@@ -183,7 +198,6 @@ public class Main {
         System.out.println("4) Remove certain product");
         System.out.println("5) Return to the main menu");
         int choice = scanner.nextInt();
-        String category;
         switch (choice) {
             case 1:
                 showSellerClothes(name);
@@ -200,36 +214,6 @@ public class Main {
 
     public static void addNewCloth(String name) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
-        System.out.println("Specify the category");
-        System.out.println("1) Jacket");
-        System.out.println("2) Hoodie");
-        System.out.println("3) Trousers");
-        System.out.println("4) Shorts");
-        System.out.println("5) Classic Shirt");
-        System.out.println("6) Sweatshirt");
-        int choice = scanner.nextInt();
-        switch (choice) {
-            case 1:
-                console.specJacket(name);
-            case 2:
-                console.specHoodie(name);
-            case 3:
-                console.specTrousers(name);
-            case 4:
-                console.specShorts(name);
-            case 5:
-                console.specClassicShirt(name);
-            case 6:
-                console.specSweatshirt(name);
-        }
-        System.out.println("New item have been successfully added");
-    }
-
-
-    public static void showSellerClothes(String name) {
-        Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Specify the category");
         System.out.println("1) Jacket");
         System.out.println("2) Hoodie");
@@ -241,17 +225,62 @@ public class Main {
         int choice = scanner.nextInt();
         switch (choice) {
             case 1:
-                console.showSellerClothes(name);
+                console.specJacket(name);
+                sellerConsole(name);
+            case 2:
+                console.specHoodie(name);
+                sellerConsole(name);
+            case 3:
+                console.specTrousers(name);
+                sellerConsole(name);
+            case 4:
+                console.specShorts(name);
+                sellerConsole(name);
+            case 5:
+                console.specClassicShirt(name);
+                sellerConsole(name);
+            case 6:
+                console.specSweatshirt(name);
+                sellerConsole(name);
+            case 7:
+                sellerConsole(name);
+        }
+        System.out.println("New item have been successfully added");
+        System.out.println("----------------------------------------");
+        sellerConsole(name);
+    }
+
+
+    public static void showSellerClothes(String name) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Specify the category");
+        System.out.println("1) Jacket");
+        System.out.println("2) Hoodie");
+        System.out.println("3) Trousers");
+        System.out.println("4) Shorts");
+        System.out.println("5) Classic Shirt");
+        System.out.println("6) Sweatshirt");
+        System.out.println("7) Go back");
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                console.showSellerClothes("jacket", name);
+                sellerConsole(name);
             case 2:
                 console.showSellerClothes("hoodie", name);
+                sellerConsole(name);
             case 3:
                 console.showSellerClothes("trousers", name);
+                sellerConsole(name);
             case 4:
                 console.showSellerClothes("shorts", name);
+                sellerConsole(name);
             case 5:
                 console.showSellerClothes("classicShirt", name);
+                sellerConsole(name);
             case 6:
                 console.showSellerClothes("sweatshirt", name);
+                sellerConsole(name);
             case 7:
                 sellerConsole(name);
         }
@@ -259,7 +288,6 @@ public class Main {
 
     public static void updateCloth(String name) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Specify the category");
         System.out.println("1) Jacket");
         System.out.println("2) Hoodie");
@@ -302,18 +330,16 @@ public class Main {
 
     public static void updateProcess(String table, String name) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Type the id of item you want to update");
         int id = scanner.nextInt();
-        scanner.nextInt();
         System.out.print("Enter new price: ");
         int price = scanner.nextInt();
         console.updateSellerClothes(table, price, id);
+        sellerConsole(name);
     }
 
     public static void removeCloth(String name) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Specify the category");
         System.out.println("1) Jacket");
         System.out.println("2) Hoodie");
@@ -356,10 +382,11 @@ public class Main {
 
     public static void removeProcess(String table, String name) {
         Scanner scanner = new Scanner(System.in);
-        Console console = new Console();
         System.out.println("Type the id of item you want to remove");
         int id = scanner.nextInt();
         console.removeSellerClothes(table, name, id);
+        System.out.println("Item was successfully removed");
+        sellerConsole(name);
     }
 
 

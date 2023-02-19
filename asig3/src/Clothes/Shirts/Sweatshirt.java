@@ -7,6 +7,15 @@ public class Sweatshirt extends Shirt {
         setComfy(comfy);
     }
 
+    private static Sweatshirt instance;
+
+    public static Sweatshirt getInstance(String brand, String model, String gender, int price, boolean durable, boolean comfy) {
+        if (instance == null) {
+            instance = new Sweatshirt(brand, model, gender, price, durable, comfy);
+        }
+        return instance;
+    }
+
     public void setComfy(boolean comfy) {
         this.comfy = comfy;
     }
